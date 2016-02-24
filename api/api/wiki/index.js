@@ -52,6 +52,7 @@ exports.all = function *() {
 	  this.status = 404;
   }else{
 	  this.body = JSON.stringify({response_type:'in_channel',text:text});
+          this.type = "application/json"
 	  this.status = 200;
   }
 }
