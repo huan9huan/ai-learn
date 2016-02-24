@@ -1,0 +1,8 @@
+{
+  "name": "wiki",
+  "description": "wiktionary",
+  "routes": {
+  	"POST /wiki" : "all",
+    "GET /wiki/:word": "all"
+  }
+}
