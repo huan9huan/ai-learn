@@ -1,3 +1,6 @@
+var fetch = require('isomorphic-fetch');
+var FormData = require('isomorphic-form-data');
+
 var RTM_EVENTS = require('slack-client').RTM_EVENTS;
 function Slack(){
 	var RtmClient = require('slack-client').RtmClient;
@@ -22,6 +25,20 @@ Slack.prototype.onMessage = function(callback) {
 }
 Slack.prototype.send = function(channel, msg) {
 	this.rtm.sendMessage(msg, channel)
+}
+Slack.prototype.sendWithAttachment = function(channel, msg, attachments,cb) {
+	var form = new FormData();
+	form.append('token', 'xoxp-19275283155-19274326341-24799077361-557d4ccea9')
+	form.append('channel', channel)
+	form.append('text', msg)
+	// var text = attachments.reduce((accu,cur) => {return accu += cur+"\n\n"}, "")
+	if(attachments && attachments.length > 0) {
+		var arr = attachments.map((a) => {return {text:a}})
+		form.append('attachments',JSON.stringify(arr))
+		console.log("with attachment ",arr)
+	}
+
+	fetch("https://slack.com/api/chat.postMessage", {method: 'POST', body: form}).then(cb)
 }
 
 exports.Slack = Slack;

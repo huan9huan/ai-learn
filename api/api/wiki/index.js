@@ -25,7 +25,7 @@ function* getCache(word) {
 }
 
 slack.onMessage(function(channel, text) {
-  console.log("recv new message ",text);
+  // console.log("in channel %s recv new message ",channel,text );
   var key = "<@" + slack.botid + ">";
   var idx = text.indexOf(key)
   if(idx == 0) {
@@ -33,19 +33,21 @@ slack.onMessage(function(channel, text) {
     var word = text.substring(idx + key.length).trim();
     console.log("find the word is ",word)
     slack.send(channel,
-      "finding the word definitions in https://en.wiktionary.org/wiki/" + word + " for word \"" + word + "\" ...")
+      "----- begin to find the word definitions in https://en.wiktionary.org/wiki/" + word + "\" ...")
     var defs; // = yield getCache(word)
     if(!defs) {
       crawlWord(word, (defs) => {
-        var idx = 1;
-        defs.map(function  (def) {
-          slack.send(channel,"No." + idx + "\t[" + def.type + "] " + def.def)
-          idx += 1
-        }) 
+        var idx = 0;
+        defs.map((def) => {
+          slack.sendWithAttachment(channel,"[" + def.type + "] " + def.def, def.attachments,
+            () => {idx += 1})
+        })
         if(defs.length == 0) {
           slack.send(channel, "not found any definitions, maybe bad word or not defined in wiktionary.org")
         }
       });
+      defs = defs || []
+      slack.send(channel, "---- end find, total defintions count " + defs.length)
     }
   }
 })
