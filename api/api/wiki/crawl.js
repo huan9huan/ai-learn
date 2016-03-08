@@ -55,7 +55,7 @@ function crawlWord(word,resolve,format) {
           var html = json.parse.text['*'];
           var root = $("#English",$(html)).parent().nextAll();//直接抓取english节点
           // find the part of speech in wikipedia.org
-          var types = ["Noun","Verb","Pronoun","Interjection", "Adjective", 
+          var types = ["Noun", "Proper_noun","Verb","Pronoun","Interjection", "Adjective", 
             "Adverb", "Preposition", "Conjunction", "Interjection", "Determiner"];
           var all = []
           types.forEach(function(type){

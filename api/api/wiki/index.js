@@ -31,6 +31,8 @@ slack.onMessage(function(channel, text) {
   if(idx == 0) {
     // get the word
     var word = text.substring(idx + key.length).trim();
+    if(word.indexOf(":") == 0)
+      word = word.substring(1).trim()
     console.log("find the word is ",word)
     slack.send(channel,
       "----- begin to find the word definitions in https://en.wiktionary.org/wiki/" + word + "\" ...")
