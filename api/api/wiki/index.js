@@ -60,14 +60,28 @@ function crawlAndSend(channel,text){
 slack.onMessage(function(channel, text) {
   crawlAndSend(channel,text)
 })
-slack.onRawMessage((m) => {
-  console.log("------ raw message",m)
-})
+// slack.onRawMessage((m) => {
+//   console.log("------ raw message",m)
+// })
 slack.onPinAdded((text,channel) => {
   imprStore.get(text, (impression) => {
   if(impression) { // 之前生成过impr,需要被star，则记住
       imprStore.remember(impression)
       slack.send(channel,"will remind you word " + impression.word + " with this impression")
+  }else{
+    slack.send(channel, "impression not found, so ignored")
+  }
+  });
+})
+
+//todo: why not work??
+slack.onStarAdded((text,channel) => {
+  imprStore.get(text, (impression) => {
+  if(impression) { // 之前生成过impr,需要被star，则记住
+      imprStore.remember(impression)
+      slack.send(channel,"will remind you word " + impression.word + " with this impression")
+  }else{
+    slack.send(channel, "impression not found, so ignored")
   }
   });
 })

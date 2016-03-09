@@ -5,7 +5,7 @@ var RTM_EVENTS = require('slack-client').RTM_EVENTS;
 function Slack(){
 	var RtmClient = require('slack-client').RtmClient;
 	var token = process.env.SLACK_API_TOKEN || 'xoxb-22492878788-G7zGYQJhi6gcZ2BXQN4M8fmW';
-	this.rtm = new RtmClient(token, {logLevel: 'debug'});
+	this.rtm = new RtmClient(token, {logLevel: 'info'});
 	console.log("rtm is starting...");
 	this.rtm.start();
 	this.botid = ""
@@ -28,27 +28,38 @@ Slack.prototype.onMessage = function(callback) {
 		}
 	})
 }
-Slack.prototype.onRawMessage = function(callback) {
-	this.rtm.on('raw_message', function (message) {
-		if(message.type === 'pin_added') {
-			console.log('<<<<  debugging: pin added',message.item)
-			this.onPinAdded(message.item)
-		}
-		callback(message);
-	})
-}
+// Slack.prototype.onRawMessage = function(callback) {
+// 	this.rtm.on('raw_message', function (message) {
+// 		if(message.type === 'pin_added') {
+// 			console.log('<<<<  debugging: pin added',message.item)
+// 			this.onPinAdded(message.item)
+// 		}
+// 		callback(message);
+// 	})
+// }
 
 Slack.prototype.onPinAdded = function(callback) {
 	console.log("pin added setup done", RTM_EVENTS.PIN_ADDED)
-	this.rtm.on(RTM_EVENTS.PIN_ADDED, function (item) {
-		console.log("pint added", item)
+	this.rtm.on(RTM_EVENTS.PIN_ADDED, function (msg) {
+		console.log("debug: pin added", msg)
+		var item = msg.item
 		if(item.type === 'message') {
-			var msg = item.message
-			callback(msg.text, msg.channel)
+			var pinMsg = item.message
+			callback(pinMsg.text, item.channel)
 		}
 	})
 }
-
+Slack.prototype.onStarAdded = function(callback) {
+	console.log("star added setup done", RTM_EVENTS.STAR_ADDED)
+	this.rtm.on(RTM_EVENTS.STAR_ADDED, function (msg) {
+		console.log("debug: star added", msg)
+		var item = msg.item
+		if(item.type === 'message') {
+			var starMsg = item.message
+			callback(starMsg.text, item.channel)
+		}
+	})
+}
 Slack.prototype.send = function(channel, msg, cb) {
 	this.rtm.sendMessage(msg, channel)
 	if(cb) {
