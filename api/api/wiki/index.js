@@ -60,6 +60,9 @@ function crawlAndSend(channel,text){
 slack.onMessage(function(channel, text) {
   crawlAndSend(channel,text)
 })
+slack.onRawMessage((m) => {
+  console.log("------ raw message",m)
+})
 slack.onPinAdded((text,channel) => {
   imprStore.get(text, (impression) => {
   if(impression) { // 之前生成过impr,需要被star，则记住

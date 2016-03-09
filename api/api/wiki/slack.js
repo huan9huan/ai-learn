@@ -20,9 +20,24 @@ function Slack(){
 }
 Slack.prototype.onMessage = function(callback) {
 	this.rtm.on(RTM_EVENTS.MESSAGE, function (message) {
-		callback(message.channel, message.text);
+		if(message.subtype === 'pin_added') {
+			console.log('>>>> debugging: pin added',message.item)
+			this.onPinAdded(message.item)
+		}else{
+			callback(message.channel, message.text);
+		}
 	})
 }
+Slack.prototype.onRawMessage = function(callback) {
+	this.rtm.on('raw_message', function (message) {
+		if(message.type === 'pin_added') {
+			console.log('<<<<  debugging: pin added',message.item)
+			this.onPinAdded(message.item)
+		}
+		callback(message);
+	})
+}
+
 Slack.prototype.onPinAdded = function(callback) {
 	console.log("pin added setup done", RTM_EVENTS.PIN_ADDED)
 	this.rtm.on(RTM_EVENTS.PIN_ADDED, function (item) {
