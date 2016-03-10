@@ -2,7 +2,7 @@ var fetch = require('isomorphic-fetch');
 var FormData = require('isomorphic-form-data');
 
 var RTM_EVENTS = require('slack-client').RTM_EVENTS;
-function Slack(){
+function DictBot(){
 	var RtmClient = require('slack-client').RtmClient;
 	var token = process.env.SLACK_API_TOKEN || 'xoxb-22492878788-G7zGYQJhi6gcZ2BXQN4M8fmW';
 	this.rtm = new RtmClient(token, {logLevel: 'info'});
@@ -18,7 +18,7 @@ function Slack(){
 	}.bind(this));
 
 }
-Slack.prototype.onMessage = function(callback) {
+DictBot.prototype.onMessage = function(callback) {
 	this.rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 		if(message.subtype === 'pin_added') {
 			console.log('>>>> debugging: pin added',message.item)
@@ -38,7 +38,7 @@ Slack.prototype.onMessage = function(callback) {
 // 	})
 // }
 
-Slack.prototype.onPinAdded = function(callback) {
+DictBot.prototype.onPinAdded = function(callback) {
 	console.log("pin added setup done", RTM_EVENTS.PIN_ADDED)
 	this.rtm.on(RTM_EVENTS.PIN_ADDED, function (msg) {
 		console.log("debug: pin added", msg)
@@ -49,7 +49,7 @@ Slack.prototype.onPinAdded = function(callback) {
 		}
 	})
 }
-Slack.prototype.onStarAdded = function(callback) {
+DictBot.prototype.onStarAdded = function(callback) {
 	console.log("star added setup done", RTM_EVENTS.STAR_ADDED)
 	this.rtm.on(RTM_EVENTS.STAR_ADDED, function (msg) {
 		console.log("debug: star added", msg)
@@ -60,13 +60,13 @@ Slack.prototype.onStarAdded = function(callback) {
 		}
 	})
 }
-Slack.prototype.send = function(channel, msg, cb) {
+DictBot.prototype.send = function(channel, msg, cb) {
 	this.rtm.sendMessage(msg, channel)
 	if(cb) {
 		cb(channel, msg)
 	}
 }
-Slack.prototype.sendWithAttachment = function(channel, msg, attachments, cb) {
+DictBot.prototype.sendWithAttachment = function(channel, msg, attachments, cb) {
 	var form = new FormData();
 	form.append('token', 'xoxp-19275283155-19274326341-24799077361-557d4ccea9')
 	form.append('channel', channel)
@@ -86,4 +86,4 @@ Slack.prototype.sendWithAttachment = function(channel, msg, attachments, cb) {
 	})
 }
 
-exports.Slack = Slack;
+module.exports = DictBot;

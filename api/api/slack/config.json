@@ -1,0 +1,7 @@
+{
+  "name": "slack",
+  "description": "slack modules",
+  "routes": {
+    "GET /slack/:word.:format": "all"
+  }
+}
