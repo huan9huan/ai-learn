@@ -3,7 +3,9 @@ function ImpressionStore (redis){
 	this.redis = redis
 }
 ImpressionStore.prototype.produce = function(key, word, def) {
-	this.redis.hset('i',key,JSON.stringify(new Impression(key, word, def)))
+	var i = new Impression(key, word, def)
+	this.redis.hset('i',key,JSON.stringify(i))
+	return i
 }
 ImpressionStore.prototype.get = function(key,cb) {
 	this.redis.hget('i',key,(err,v) => {

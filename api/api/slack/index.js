@@ -7,18 +7,18 @@ var crawlWord = require('../wiki/crawl')
 var redis = require('redis');
 
 var remindBot = new RemindBot();
-var doctBot = new DictBot();
+var dictBot = new DictBot();
 
-doctBot.onMessage(function(channel, text) {
+dictBot.onMessage(function(channel, text) {
   crawlAndSend(channel,text)
 })
-doctBot.onPinAdded((text,channel) => {
+remindBot.onPinAdded((text,channel) => {
   imprStore.get(text, (impression) => {
   if(impression) { // 之前生成过impr,需要被star，则记住
       imprStore.remember(impression)
-      doctBot.send(channel,"will remind you word " + impression.word + " with this impression")
+      dictBot.send(channel,"will remind you word " + impression.word + " with this impression")
   }else{
-    doctBot.send(channel, "impression not found, so ignored")
+    dictBot.send(channel, "impression not found, so ignored")
   }
   });
 })
@@ -34,7 +34,7 @@ db.on('ready',function(){
 function crawlAndSend(channel,text){
   if(!text || typeof text !== "string" || !channel)
     return 
-  var key = "<@" + doctBot.botid + ">";
+  var key = "<@" + dictBot.botid + ">";
   var idx = text.indexOf(key)
   if(idx == 0) { //被点名需要得出解释
     // get the word
@@ -42,25 +42,25 @@ function crawlAndSend(channel,text){
     if(word.indexOf(":") == 0)
       word = word.substring(1).trim()
     console.log("find the word is ",word)
-    doctBot.send(channel,
+    dictBot.send(channel,
       "----- begin to find the word definitions in https://en.wiktionary.org/wiki/" + word + "\" ...")
     var defs; // = yield getCache(word)
     if(!defs) {
       crawlWord(word, (defs) => {
+        if(defs.length > 0){
+          dictBot.send(channel, "---- end find, total defintions " + defs.length + ", list as :")
+        }else {  
+          dictBot.send(channel, "not found any definitions, maybe bad word or not defined in wiktionary.org")
+        }
         var idx = 0;
         defs.map((def) => {
-          doctBot.sendWithAttachment(channel,"[" + def.type + "] " + def.def, def.attachments,
+          dictBot.sendWithAttachment(channel," *[" + def.type + "]* " + def.def, def.attachments,
             (channel, msg) => {
               var i = imprStore.produce(msg,word,def)   // 生产一个新的impression
               console.log("produce new imporession", i)
             })
         })
-        if(defs.length == 0) {
-          doctBot.send(channel, "not found any definitions, maybe bad word or not defined in wiktionary.org")
-        }
       });
-      defs = defs || []
-      doctBot.send(channel, "---- end find, total defintions count " + defs.length)
     }
   }
 }

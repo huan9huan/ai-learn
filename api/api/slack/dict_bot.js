@@ -5,7 +5,7 @@ var RTM_EVENTS = require('slack-client').RTM_EVENTS;
 function DictBot(){
 	var RtmClient = require('slack-client').RtmClient;
 	var token = process.env.SLACK_API_TOKEN || 'xoxb-22492878788-G7zGYQJhi6gcZ2BXQN4M8fmW';
-	this.rtm = new RtmClient(token, {logLevel: 'info'});
+	this.rtm = new RtmClient(token, {logLevel: 'debug'});
 	console.log("rtm is starting...");
 	this.rtm.start();
 	this.botid = ""
@@ -37,29 +37,6 @@ DictBot.prototype.onMessage = function(callback) {
 // 		callback(message);
 // 	})
 // }
-
-DictBot.prototype.onPinAdded = function(callback) {
-	console.log("pin added setup done", RTM_EVENTS.PIN_ADDED)
-	this.rtm.on(RTM_EVENTS.PIN_ADDED, function (msg) {
-		console.log("debug: pin added", msg)
-		var item = msg.item
-		if(item.type === 'message') {
-			var pinMsg = item.message
-			callback(pinMsg.text, item.channel)
-		}
-	})
-}
-DictBot.prototype.onStarAdded = function(callback) {
-	console.log("star added setup done", RTM_EVENTS.STAR_ADDED)
-	this.rtm.on(RTM_EVENTS.STAR_ADDED, function (msg) {
-		console.log("debug: star added", msg)
-		var item = msg.item
-		if(item.type === 'message') {
-			var starMsg = item.message
-			callback(starMsg.text, item.channel)
-		}
-	})
-}
 DictBot.prototype.send = function(channel, msg, cb) {
 	this.rtm.sendMessage(msg, channel)
 	if(cb) {
@@ -67,8 +44,11 @@ DictBot.prototype.send = function(channel, msg, cb) {
 	}
 }
 DictBot.prototype.sendWithAttachment = function(channel, msg, attachments, cb) {
+	if(!attachments || attachments.length == 0){
+		return this.send(channel, msg, cb);
+	}
 	var form = new FormData();
-	form.append('token', 'xoxp-19275283155-19274326341-24799077361-557d4ccea9')
+	form.append('token', 'xoxp-19275283155-19274326341-26411394562-d973f90218')
 	form.append('channel', channel)
 	form.append('text', msg)
 	// var text = attachments.reduce((accu,cur) => {return accu += cur+"\n\n"}, "")
