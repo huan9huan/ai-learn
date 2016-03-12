@@ -15,7 +15,11 @@ dictBot.onMessage(function(channel, text) {
 remindBot.onPinAdded((text,channel) => {
   imprStore.get(text, (impression) => {
   if(impression) { // 之前生成过impr,需要被star，则记住
-      imprStore.remember(impression)
+      imprStore.remember(impression,(i) => {
+        dictBot.send(channel," *" + i.word + "* " + i.def.type + " " + i.def.def, i.attachments, () => {
+          console.log("remind " + i.id + " done!")
+        }) 
+      })
       dictBot.send(channel,"will remind you word " + impression.word + " with this impression")
   }else{
     dictBot.send(channel, "impression not found, so ignored")

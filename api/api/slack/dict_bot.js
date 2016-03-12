@@ -5,7 +5,7 @@ var RTM_EVENTS = require('slack-client').RTM_EVENTS;
 function DictBot(){
 	var RtmClient = require('slack-client').RtmClient;
 	var token = process.env.SLACK_API_TOKEN || 'xoxb-22492878788-G7zGYQJhi6gcZ2BXQN4M8fmW';
-	this.rtm = new RtmClient(token, {logLevel: 'debug'});
+	this.rtm = new RtmClient(token, {logLevel: 'info'});
 	console.log("rtm is starting...");
 	this.rtm.start();
 	this.botid = ""
