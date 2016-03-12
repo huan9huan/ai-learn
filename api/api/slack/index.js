@@ -3,6 +3,7 @@ require('es6-promise').polyfill();
 var DictBot = require('./dict_bot')
 var RemindBot = require('./remind_bot')
 var ImpressionStore = require('./impression_store')
+var RemindStore = require('./remind_store')
 var crawlWord = require('../wiki/crawl')
 var redis = require('redis');
 
@@ -15,12 +16,8 @@ dictBot.onMessage(function(channel, text) {
 remindBot.onPinAdded((text,channel) => {
   imprStore.get(text, (impression) => {
   if(impression) { // 之前生成过impr,需要被star，则记住
-      imprStore.remember(impression,(i) => {
-        dictBot.send(channel," *" + i.word + "* " + i.def.type + " " + i.def.def, i.attachments, () => {
-          console.log("remind " + i.id + " done!")
-        }) 
-      })
-      dictBot.send(channel,"will remind you word " + impression.word + " with this impression")
+      var i = remindStore.remember(impression,channel);
+      dictBot.send(channel,"will remind you word " + impression.word + " in " + i.timeout/1000 + " second")
   }else{
     dictBot.send(channel, "impression not found, so ignored")
   }
@@ -29,9 +26,17 @@ remindBot.onPinAdded((text,channel) => {
 
 var db = redis.createClient()
 var imprStore;
+var remindStore;
+
 db.on('ready',function(){
   console.log('redis connected!')
   imprStore = new ImpressionStore(db)
+  remindStore = new RemindStore(db, (i) => {
+        console.log("remind recved", i)
+        remindBot.send(i.channel," *" + i.word + "* " + i.def.type + " " + i.def.def, i.attachments, () => {
+          console.log("remind " + i.id + " done!")
+        })
+      })
 })
 
 
