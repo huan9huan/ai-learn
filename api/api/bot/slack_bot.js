@@ -4,17 +4,18 @@ var FormData = require('isomorphic-form-data');
 var RTM_EVENTS = require('slack-client').RTM_EVENTS;
 var RtmClient = require('slack-client').RtmClient;
 var CLIENT_EVENTS = require('slack-client').CLIENT_EVENTS;
+var debug = require('debug')('bot')
 
 class SlackBot{
 
 	constructor(name, token){
 		this.rtm = new RtmClient(token, {logLevel: 'info'});
-		console.log(name + " is starting...");
+		debug(name + " is starting...");
 		this.rtm.start();
 		this.botid = ""
 		this.rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (json) {
 		  if(json.ok) {
-		    console.log(name + " is authenticated ok, my id is %s", json.self.id);
+		    debug(name + " is authenticated ok, my id is %s", json.self.id);
 		    this.botid = json.self.id
 		  }
 		}.bind(this));
@@ -23,7 +24,7 @@ class SlackBot{
 	onMessage(callback) {
 		this.rtm.on(RTM_EVENTS.MESSAGE, function (message) {
 			if(message.subtype === 'pin_added' && this.onPinAdd) {
-				console.log('>>>> debugging: pin added',message.item)
+				debug('>>>> debugging: pin added',message.item)
 				this.onPinAdded(message.item)
 			}else{
 				callback(message.channel, message.text);
@@ -49,7 +50,7 @@ class SlackBot{
 		if(attachments && attachments.length > 0) {
 			var arr = attachments.map((a) => {return {text:a}})
 			form.append('attachments',JSON.stringify(arr))
-			console.log("with attachment ",arr)
+			debug("with attachment ",arr)
 		}
 
 		fetch("https://slack.com/api/chat.postMessage", {method: 'POST', body: form})

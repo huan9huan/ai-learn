@@ -1,7 +1,14 @@
 'use strict';
 
-var Impression = require('./impression')
 var md5 = require('js-md5')
+
+class Impression{
+	constructor(id, word, def) {
+		this.id = id
+		this.word = word
+		this.def = def
+    }
+}
 
 class ImpressionStore{
 	constructor(redis){

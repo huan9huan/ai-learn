@@ -1,5 +1,6 @@
 'use strict';
 var CronJob = require('cron').CronJob;
+var debug = require('debug')('store')
 
 class RemindStore {
 
@@ -9,7 +10,7 @@ class RemindStore {
 		this.remindCronJob = new CronJob('*/10 * * * * *', function() {
 		  // 查找需要被remind的impression
 		  var now = new Date().getTime()
-		  console.log("now ",now)
+		  debug("cronjob running... now ",now)
 		  this.redis.hgetall('rem',function(err, results){
 		  	// console.log("rem get all done, result count " , results.length)
 		  	if(err) {
