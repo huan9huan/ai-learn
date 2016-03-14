@@ -1,7 +1,8 @@
 {
   "name": "slack",
-  "description": "slack modules",
+  "description": "slack bots api",
   "routes": {
-    "GET /slack/:word.:format": "all"
+    "GET /bot/remind": "remind",
+    "GET /bot/lookup": "lookup"    
   }
 }

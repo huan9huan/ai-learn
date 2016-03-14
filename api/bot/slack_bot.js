@@ -50,7 +50,7 @@ class SlackBot{
 		if(attachments && attachments.length > 0) {
 			var arr = attachments.map((a) => {return {text:a}})
 			form.append('attachments',JSON.stringify(arr))
-			debug("with attachment ",arr)
+			// debug("with attachment ",arr)
 		}
 
 		fetch("https://slack.com/api/chat.postMessage", {method: 'POST', body: form})

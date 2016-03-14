@@ -1,7 +1,9 @@
 var dictionary = require("./dictionary")
 var impression = require("./impression")
+var remind = require("./remind")
 
 module.exports = {
-	dict: dict.
+	dictionary: dictionary,
 	impression: impression,
+	remind: remind
 }

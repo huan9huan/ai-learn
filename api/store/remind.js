@@ -10,11 +10,11 @@ class RemindStore {
 		this.remindCronJob = new CronJob('*/10 * * * * *', function() {
 		  // 查找需要被remind的impression
 		  var now = new Date().getTime()
-		  debug("cronjob running... now ",now)
+		  debug("remind cronjob running... now ",now)
 		  this.redis.hgetall('rem',function(err, results){
 		  	// console.log("rem get all done, result count " , results.length)
 		  	if(err) {
-		  		console.log(err)
+		  		debug(err)
 		  	}else{
 		  		for (var i in results) {
 		           var item = JSON.parse(results[i]);
