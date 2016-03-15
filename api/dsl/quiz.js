@@ -1,7 +1,8 @@
 'use strict';
 
-var debug = require('debug')('dsl');
+var debug = require('debug')('quiz');
 var QuizStore = require('../store/quiz')
+var _ = require('underscore')
 
 class QuizBuilder {
 	constructor(word) {
@@ -11,7 +12,7 @@ class QuizBuilder {
 		this.impressions = impressions;
 	}
 	setRemind(reminds) {
-		if(reminds && this.reminds.length > 0) {
+		if(reminds && reminds.length > 0) {
 		  this.reminds = reminds;	
 		  this.majar = this.reminds[0]
 		}else{
@@ -21,7 +22,12 @@ class QuizBuilder {
 	setNoiseWords(noises) {
 		this.noises = noises
 	}
+	setFail(reason) {
+		this.fail = reason
+	}
 	build() {
+		if(this.fail)
+			throw new Error(this.fail)
 		return new Question(this.word, this.majar.def.def, this.noises)
 	}
 }
@@ -77,6 +83,7 @@ class Quiz {
 			this.quizStore.selectNoiseWord(this.word)
 			.then((noises) => {
 				if(noises && noises.length >= 1) {
+					noises = _.sample(noises,Math.min(noises.length, 3))
 					this.quizBuilder.setNoiseWords(noises)
 					resolve(this.quizBuilder)
 				}else{
