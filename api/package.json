@@ -24,7 +24,8 @@
     "koa-response-time": "~1.0.2",
     "koa-router": "~3.1.4",
     "redis": "~0.10.3",
-    "slack-client": "^2.0.4"
+    "slack-client": "^2.0.4",
+    "slack-quizbot": "^0.6.3"
   },
   "devDependencies": {
     "mocha": "*",
