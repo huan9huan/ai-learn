@@ -1,0 +1,7 @@
+{
+  "name": "quiz",
+  "description": "create quiz",
+  "routes": {
+  	"GET /quiz/:word": "get"
+  }
+}
