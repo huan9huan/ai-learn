@@ -1,4 +1,4 @@
-var Quiz = require('./dsl/quiz')
+var Quiz = require('../dsl/quiz')
 var redis = require('redis');
 var debug = require('debug')("test")
 

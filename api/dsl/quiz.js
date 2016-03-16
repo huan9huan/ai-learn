@@ -25,10 +25,17 @@ class QuizBuilder {
 	setFail(reason) {
 		this.fail = reason
 	}
+	buildDesc() {
+		var i = 0;
+		var answers = _.shuffle(this.noises.concat([this.word]))
+						.reduce((accu,w) => {return accu = accu + "" + (i+=1) + ". " + w + " "},"")
+		const template = "Which word is most closed? \n\"_$def$_\"\n*$answers$*"
+		return template.replace("$def$",this.majar.def.def).replace("$answers$",answers)
+	}
 	build() {
 		if(this.fail)
 			throw new Error(this.fail)
-		return new Question(this.word, this.majar.def.def, this.noises)
+		return new Question(this.word, this.buildDesc(), this.noises)
 	}
 }
 

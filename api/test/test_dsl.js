@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var crawl = require('./dsl/crawl')
+var crawl = require('../dsl/crawl')
 
 var caches = {}
 var debug = require('debug')('dsl');

@@ -9,6 +9,7 @@ var debug = require('debug')('bot')
 class SlackBot{
 
 	constructor(name, token){
+		this.name = name
 		this.rtm = new RtmClient(token, {logLevel: 'info'});
 		debug(name + " is starting...");
 		this.rtm.start();
@@ -43,10 +44,11 @@ class SlackBot{
 			return this.send(channel, msg, cb);
 		}
 		var form = new FormData();
-		form.append('token', 'xoxp-19275283155-19274326341-26411394562-d973f90218')
+		form.append('token', this.token)
 		form.append('channel', channel)
 		form.append('text', msg)
-		// var text = attachments.reduce((accu,cur) => {return accu += cur+"\n\n"}, "")
+		form.append('as_user', 'false')
+		form.append('username', this.name)
 		if(attachments && attachments.length > 0) {
 			var arr = attachments.map((a) => {return {text:a}})
 			form.append('attachments',JSON.stringify(arr))

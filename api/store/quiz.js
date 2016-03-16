@@ -6,6 +6,7 @@ class QuizStore {
 	constructor(redis){
 		this.redis = redis;
 	}
+	
 	toArray(results) {
 		var items = []
 		for(var i in results){
