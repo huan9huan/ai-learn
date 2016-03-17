@@ -30,7 +30,7 @@ class QuizStore {
 	}
 	selectReminds(word) {
 		return new Promise((resolve,reject) => {
-			this.redis.hgetall('i',(err,results) => {
+			this.redis.hgetall('rem',(err,results) => {
 				if(err) {
 					reject(err)
 				}else{
@@ -59,5 +59,23 @@ class QuizStore {
 			})
 		})
 	}
+
+	selectRemindWords() {
+		return new Promise((resolve,reject) => {
+			this.redis.hgetall('rem',(err,results) => {
+				if(err) {
+					reject(err)
+				}else{
+					resolve(this.toArray(results)
+						.map(im =>{return im.word}))
+				}
+			})
+		})
+	}
+
+	save(question) {
+		this.redis.hset('q',question.id,JSON.stringify(question))
+	}
+
 }
 module.exports = QuizStore;

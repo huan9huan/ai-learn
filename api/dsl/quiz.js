@@ -3,6 +3,7 @@
 var debug = require('debug')('quiz');
 var QuizStore = require('../store/quiz')
 var _ = require('underscore')
+var md5 = require('js-md5')
 
 class QuizBuilder {
 	constructor(word) {
@@ -13,7 +14,7 @@ class QuizBuilder {
 	}
 	setRemind(reminds) {
 		if(reminds && reminds.length > 0) {
-		  this.reminds = reminds;	
+		  this.reminds = reminds;
 		  this.majar = this.reminds[0]
 		}else{
 			this.majar = this.impressions[0]
@@ -26,23 +27,32 @@ class QuizBuilder {
 		this.fail = reason
 	}
 	buildDesc() {
+		var idxSeq = ['A','B','C','D','E','F'];
 		var i = 0;
-		var answers = _.shuffle(this.noises.concat([this.word]))
-						.reduce((accu,w) => {return accu = accu + "" + (i+=1) + ". " + w + " "},"")
-		const template = "Which word is most closed? \n\"_$def$_\"\n*$answers$*"
-		return template.replace("$def$",this.majar.def.def).replace("$answers$",answers)
+		this.options = _.shuffle(this.noises.concat([this.word]))
+				.map((w) => {return {idx:idxSeq[i++], word: w, correct:this.word === w}});
+		var optionDesc = this.options.reduce((accu,option) => {
+			return accu = accu + option.idx + ". " + option.word + " "},""
+		)
+		const template = "Which word is most closed? \n\"_$def$_\"\n*$options$*"
+		this.desc = template.replace("$def$",this.majar.def.def).replace("$options$",optionDesc)
+		return this.desc
 	}
 	build() {
 		if(this.fail)
 			throw new Error(this.fail)
-		return new Question(this.word, this.buildDesc(), this.noises)
+		this.buildDesc()
+		const id = md5(this.desc)
+		return new Question(id, this.word, this.desc, this.options, this.noises)
 	}
 }
 
 class Question {
-	constructor(word, desc, noises) {
+	constructor(id, word, desc, options, noises) {
+		this.id = id
 		this.word = word
 		this.desc = desc
+		this.options = options
 		this.noises = noises
 	}
 }
@@ -52,7 +62,7 @@ class Quiz {
 	constructor(word,db) {
 		this.word = word
 		this.quizStore = new QuizStore(db)
-		this.quizBuilder = new QuizBuilder(this.word) 
+		this.quizBuilder = new QuizBuilder(this.word)
 	}
 	_selectImpression() {
 		return new Promise((resolve,reject) => {

@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "mocha": "*",
+    "readline-sync": "^1.4.1",
     "should": "*",
     "supertest": "~0.8.2"
   },
