@@ -73,8 +73,28 @@ class QuizStore {
 		})
 	}
 
-	save(question) {
-		this.redis.hset('q',question.id,JSON.stringify(question))
+	getQuizSession() {
+		return new Promise((resolve,reject) => {
+			this.redis.hget('q',(err,results) =>{
+				if(err) {
+					reject(err)
+				}else{
+					resolve(JSON.parse(results))
+				}			
+			})
+		})
+	}
+
+	saveQuiz(questions) {
+		var quiz = {
+			createdAt:new Date().getTime(),
+			questions: questions,
+			status: 0,
+			running: 0,
+			scores:[]
+		}
+		this.redis.hset('q',JSON.stringify(quiz))
+		return quiz
 	}
 
 }
