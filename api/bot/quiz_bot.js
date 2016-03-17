@@ -40,31 +40,55 @@ class QuizBot extends SlackBot{
 	}
 
 	_generateQuiz(words) {
+		var db = this.db
 		return Promise.all(words.map(w => {
 			return new Promise((resolve,reject) => {
 				new Quiz(w,db).gen().then(q => {
 					resolve(q)
+				}).catch(err => {
+					debug(err)
 				})
 			})
 		}))
 	}
 
 	_storeQuiz(questions) {
+		// debug("quiz questions: ", questions)
 		return new QuizStore(this.db).saveQuiz(questions)
 	}
 	_isValidChoose(choose) {
 		const valids = ["A","B","C","D","E","F"]
-		return choose.filter((v) => {return choose === v}).length > 0
+		return valids.filter((v) => {return choose === v}).length > 0
 	}
 
 	_cmd(channel,text){
 	  var cmd = this._parse(channel,text)
 	  debug("get cmd", cmd)
 
-	  new QuizStore(this.db).getQuizSession().then(this._dealInput.bind(this,channel,cmd))
+	  if(cmd === "start") {
+	  	this.send(channel,'正在产生此频道的测试集....')
+	  	this._selectQuizWords().then(this._generateQuiz.bind(this)).then(this._storeQuiz.bind(this))
+	  	.then((quizSession) => {
+	  		this.send(channel,"产生完毕，题目个数" + quizSession.questions.length 
+	  			+ ",建议" + quizSession.questions.length + "分钟内完成.")
+	  		// 发送一个题目
+	  		var question = quizSession.questions[0]
+	  		debug("first question", question)
+	  		this.send(channel, question.desc)
+	  		quizSession.running = 0
+	  		new QuizStore(this.db).update(quizSession)
+	  	})
+	  } 
+	  else if(cmd == "stop") {
+	  	this.send(channel,'测试结束, 得分xxx')
+	  	return
+	  }
+
+	  new QuizStore(this.db).getQuizSession().then(this._dealInput.bind(this,channel,text))
 	}
 
 	_dealInput(channel,cmd,quizSession){
+	  debug("quiz input is ",cmd,"quiz session status ",quizSession.status)
 	  if(quizSession && quizSession.status === 0) {
 	  	// 正在进行quiz
 	  	var choose = cmd.toUpperCase()
@@ -79,10 +103,14 @@ class QuizBot extends SlackBot{
 	  	}else{
 	  		quizSession.scores.push(0)
 	  	}
-	  	this.send(channel,'答案' + internal.correct ? "正确" : "错误")
-	  	quizSession.running += 1
+	  	this.send(channel,'答案' + (internal.correct ? "正确" : "错误"))
+	  	debug(quizSession)
+	  	quizSession.running = quizSession.running + 1
 	  	new QuizStore(this.db).update(quizSession)
+	  	debug("updated quiz running index",quizSession.running)
 	  	if(quizSession.running >= quizSession.questions.length) {
+	  		quizSession.status = -1
+	  		new QuizStore(this.db).update(quizSession)
 	  		var score = quizSession.scores.reduce((accu,cur) => {return accu + cur},0)
 	  		this.send(channel,'测试结束，得分:' + score + "/" + quizSession.scores.length )	
 	  		return ;  		
@@ -92,28 +120,7 @@ class QuizBot extends SlackBot{
 	  		return ;		
 	  	}
 	  }
-	  if(!cmd){
-	  	debug("no command, ignore") 
-	  	return
-	  }
 
-	  if(cmd === "start") {
-	  	this.send(channel,'正在产生此频道的测试集....')
-	  	this._selectQuizWords().then(this._generateQuiz).then(this._storeQuiz)
-	  	.then((quizSession) => {
-	  		this.send(channel,"产生完毕，题目个数" + quizSession.questions.length 
-	  			+ ",建议" + quizSession.questions.length + "分钟内完成.id=",quizSession.createdAt)
-	  		// 发送一个题目
-	  		var question = quizSession.questions[0]
-	  		this.send(channel, question.desc)
-	  		quizSession.running = 0
-	  		new QuizStore(this.db).update(quizSession)
-	  	})
-	  } 
-	  else if(cmd == "stop") {
-	  	this.send(channel,'测试结束, 得分xxx')
-	  	return
-	  }
 	  
 	  // var word = cmd
 	  // new Quiz(word,this.db).gen().then((question) => {

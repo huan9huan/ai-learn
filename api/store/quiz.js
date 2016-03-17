@@ -75,7 +75,7 @@ class QuizStore {
 
 	getQuizSession() {
 		return new Promise((resolve,reject) => {
-			this.redis.hget('q',(err,results) =>{
+			this.redis.get('q',(err,results) =>{
 				if(err) {
 					reject(err)
 				}else{
@@ -93,9 +93,13 @@ class QuizStore {
 			running: 0,
 			scores:[]
 		}
-		this.redis.hset('q',JSON.stringify(quiz))
+		this.redis.set('q',JSON.stringify(quiz))
 		return quiz
 	}
 
+	update(quiz) {
+		this.redis.set('q',JSON.stringify(quiz))
+		return quiz
+	}
 }
 module.exports = QuizStore;
