@@ -2,6 +2,8 @@ var fetch = require('isomorphic-fetch');
 var $ = require('cheerio');
 var info = require('debug')('dsl');
 var err = require('debug')('err');
+var md5 = require('js-md5')
+var Part = require('../model/part')
 
 function crawl(word) {
 	return new Promise((resolve, reject) => {
@@ -25,7 +27,8 @@ function crawl(word) {
 	              var defs = definitions(root,type,"text");
 	              var parts = defs.map((d) => {
 	                // console.log("parse text ",d)
-	                return new Part(type, extractDefs(d),extractAttachments(d));
+	                var desc = extractDefs(d);
+	                return new Part(md5(word + desc), type, desc, extractAttachments(d));
 	              })
 	              all = all.concat(parts)
 	          });
@@ -44,12 +47,6 @@ function crawl(word) {
 	        return []
 	      });
 	})
-}
-
-function Part(type, def, attachments) {
-  this.type = type;
-  this.def = def;
-  this.attachments = attachments || [];
 }
 
 function definitions(root, type, format){

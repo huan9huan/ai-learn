@@ -11,13 +11,13 @@ class Impression{
 }
 
 class ImpressionStore{
-	constructor(redis){
+	constructor(redis) {
 		this.redis = redis;
 	}
 
-	produce(key, word, def) {
-		var i = new Impression(md5(key), word, def)
-		this.redis.hset('i',key,JSON.stringify(i))
+	produce(word, def) {
+		var i = new Impression(def.id, word, def)
+		this.redis.hset('i',def.id,JSON.stringify(i))
 		return i
 	}
     get(key,cb) {

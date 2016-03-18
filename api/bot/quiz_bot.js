@@ -2,7 +2,7 @@
 var SlackBot = require('./slack_bot')
 var QuizStore = require('../store/quiz')
 var Quiz = require('../dsl/quiz')
-var redis = require('redis');
+var redis = require('redis')
 var debug = require('debug')('bot')
 
 class QuizBot extends SlackBot{
@@ -35,39 +35,13 @@ class QuizBot extends SlackBot{
 	  }
 	}
 
-	_selectQuizWords() {
-		return new QuizStore(this.db).selectRemindWords()
-	}
-
-	_generateQuiz(words) {
-		var db = this.db
-		return Promise.all(words.map(w => {
-			return new Promise((resolve,reject) => {
-				new Quiz(w,db).gen().then(q => {
-					resolve(q)
-				}).catch(err => {
-					debug(err)
-				})
-			})
-		}))
-	}
-
-	_storeQuiz(questions) {
-		// debug("quiz questions: ", questions)
-		return new QuizStore(this.db).saveQuiz(questions)
-	}
-	_isValidChoose(choose) {
-		const valids = ["A","B","C","D","E","F"]
-		return valids.filter((v) => {return choose === v}).length > 0
-	}
-
 	_cmd(channel,text){
 	  var cmd = this._parse(channel,text)
 	  debug("get cmd", cmd)
 
 	  if(cmd === "start") {
 	  	this.send(channel,'正在产生此频道的测试集....')
-	  	this._selectQuizWords().then(this._generateQuiz.bind(this)).then(this._storeQuiz.bind(this))
+	  	this.starQuiz()
 	  	.then((quizSession) => {
 	  		this.send(channel,"产生完毕，题目个数" + quizSession.questions.length 
 	  			+ ",建议" + quizSession.questions.length + "分钟内完成.")
@@ -120,17 +94,6 @@ class QuizBot extends SlackBot{
 	  		return ;		
 	  	}
 	  }
-
-	  
-	  // var word = cmd
-	  // new Quiz(word,this.db).gen().then((question) => {
-	  // 	debug(question)
-	  // 	this.send(channel, question.desc)
-	  // }).catch((err) => {
-	  // 	debug(err)
-	  // 	this.send(channel, err)
-	  // })
-
 	}
 }
 

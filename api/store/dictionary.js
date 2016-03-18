@@ -12,13 +12,14 @@ function fetch(word) {
       }
     })
   }).then((v) => {
-      console.log("get cache for word %s",word)
+      debug("got cache for word %s",word)
       return JSON.parse(v)
     })
 }
 function cache(word, json) {
   db.hset('wiki', word, JSON.stringify(json))
   debug("cache word ",word)
+  return json
 }
 
 module.exports = {

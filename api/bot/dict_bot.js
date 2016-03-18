@@ -49,19 +49,19 @@ class DictBot extends SlackBot{
       return defs
 	}
 
-	_push_all(channel, word,defs) {
+	_push_all(channel,word,defs) {
 		defs.map((def) => {
           this.sendWithAttachment(channel," *[" + def.type + "]* " + def.def, def.attachments,
             (channel, msg) => {
-              var i = this.imprStore.produce(msg,word,def)   // 生产一个新的impression
+              var i = this.imprStore.produce(word,def)   // 生产一个新的impression
               // debug("produce new imporession", i)
             })
 	    })
 	}
 
 	_lookup(channel,text){
-          var word = null;
-	  this._parse(channel,text)
+         var word = null;
+	     this._parse(channel,text)
             .then((w) => {word = w; return w})
 	    .then(this._notifyStarting.bind(this,channel))
 	    .then(lookup)

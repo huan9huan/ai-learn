@@ -86,13 +86,7 @@ class QuizStore {
 	}
 
 	saveQuiz(questions) {
-		var quiz = {
-			createdAt:new Date().getTime(),
-			questions: questions,
-			status: 0,
-			running: 0,
-			scores:[]
-		}
+		var quizSession = new QuizSession(questions)
 		this.redis.set('q',JSON.stringify(quiz))
 		return quiz
 	}
