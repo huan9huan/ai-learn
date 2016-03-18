@@ -1,9 +1,10 @@
 'use strict';
 var SlackBot = require('./slack_bot')
 var RemindStore = require('../store/remind')
-var ImpressionStore = require('../store/impression')
+var Remind = require('../dsl/remind')
 var debug = require('debug')('bot')
 var redis = require('redis');
+var md5 = require('js-md5')
 
 var RTM_EVENTS = require('slack-client').RTM_EVENTS;
 
@@ -12,18 +13,10 @@ class RemindBot extends SlackBot
 	constructor(){
 		super('@remindbot','xoxb-25742228035-IlIwY0MdZlK3hXOrOoVovWJz')
 		this.db = redis.createClient()
+		this.reminder = null
 		this.db.on('ready',() => {
-			this.imprStore = null;
-			this.imprStore = new ImpressionStore(this.db)
+			this.reminder = new Remind(this.db);
 		})
-
-		this.remindStore = new RemindStore(this.db, (i) => {
-	        debug("remind recved", i)
-	        this.send(i.channel," *" + i.word + "* " + i.def.type + " " + i.def.def, 
-	        	i.attachments, () => {
-	          debug("remind " + i.id + " done!")
-	        })
-	    })
 
 		this.rtm.on(RTM_EVENTS.PIN_ADDED, (msg) => {
 			var item = msg.item
@@ -37,17 +30,14 @@ class RemindBot extends SlackBot
 	 }
 
 	 star(channel,text) {
-	 	return new Promise((resolve, reject) => {
-	 		this.imprStore.get(text,(i) => {
-	 			if(i){
-			 	  var remind = this.remindStore.remember(i,channel);
-				  this.send(channel,"OK! bot will remind you for word " + remind.word + " in " + i.timeout/1000 + " second")
-				  resolve(remind)
-	 			}else{
-	 			   reject("no impression " + text)
-	 			}
-	 		})
-	 	}).catch(debug)
+ 		var impressionId = md5(text)
+ 		this.reminder.remind(impressionId,channel)
+ 		.then((i) => {
+ 			this.send(channel,"OK! this impression is starred for word " + i.word)
+ 		})
+ 		.catch(() => {
+ 			this.send(channel,"no impression defined")
+ 		})
 	}
 }
 

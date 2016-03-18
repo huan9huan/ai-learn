@@ -41,7 +41,7 @@ class QuizBot extends SlackBot{
 
 	  if(cmd === "start") {
 	  	this.send(channel,'正在产生此频道的测试集....')
-	  	this.starQuiz()
+	  	new Quiz(this.db).starQuiz()
 	  	.then((quizSession) => {
 	  		this.send(channel,"产生完毕，题目个数" + quizSession.questions.length 
 	  			+ ",建议" + quizSession.questions.length + "分钟内完成.")
@@ -52,6 +52,10 @@ class QuizBot extends SlackBot{
 	  		quizSession.running = 0
 	  		new QuizStore(this.db).update(quizSession)
 	  	})
+	  	.catch((err) => {
+	  		debug(err)
+	  		this.send(channel,err)
+	  	})
 	  } 
 	  else if(cmd == "stop") {
 	  	this.send(channel,'测试结束, 得分xxx')
@@ -61,6 +65,11 @@ class QuizBot extends SlackBot{
 	  new QuizStore(this.db).getQuizSession().then(this._dealInput.bind(this,channel,text))
 	}
 
+	_isValidChoose(choose) {
+		const valids = ["A","B","C","D","E","F"]
+		return valids.filter((v) => {return choose === v}).length > 0
+	}
+	
 	_dealInput(channel,cmd,quizSession){
 	  debug("quiz input is ",cmd,"quiz session status ",quizSession.status)
 	  if(quizSession && quizSession.status === 0) {

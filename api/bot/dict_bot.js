@@ -4,6 +4,7 @@ var ImpressionStore = require('../store/impression')
 var lookup = require('../dsl/lookup')
 var redis = require('redis');
 var debug = require('debug')('bot')
+var toImpressionDesc = require('../dsl/utils').toImpressionDesc
 
 class DictBot extends SlackBot{
 	constructor(){
@@ -18,24 +19,22 @@ class DictBot extends SlackBot{
 		this.onMessage(this._lookup.bind(this))
 	}
 	_parse(channel,text) {
-	  return new Promise((resolve,reject) => {
-		  if(!text || typeof text !== "string" || !channel){
-		    reject("bad format")
-		  }else{
-		  	var key = "<@" + this.botid + ">";
-	  		var idx = text.indexOf(key)
-	  		if(idx == 0) { //被点名需要得出解释
-			    // get the word
-			    var word = text.substring(idx + key.length).trim();
-			   	if(word.indexOf(":") == 0)
-	      			word = word.substring(1).trim();
-	      		resolve(word)
-			}
-		  }
-	  })
+	  if(!text || typeof text !== "string" || !channel){
+	    return
+	  }else{
+	  	var key = "<@" + this.botid + ">";
+  		var idx = text.indexOf(key)
+  		if(idx == 0) { //被点名需要得出解释
+		    // get the word
+		    var word = text.substring(idx + key.length).trim();
+		   	if(word.indexOf(":") == 0)
+      			word = word.substring(1).trim();
+      		return word
+		}
+	  }
 	}
 
-	_notifyStarting(channel, word) {
+	_notifyStart(channel, word) {
 	  this.send(channel,">>>> begin to find the word definitions in https://en.wiktionary.org/wiki/" + word + "\" ...")
 	  return word
 	}
@@ -49,9 +48,9 @@ class DictBot extends SlackBot{
       return defs
 	}
 
-	_push_all(channel,word,defs) {
+	_saveToImpressions(channel,word,defs) {
 		defs.map((def) => {
-          this.sendWithAttachment(channel," *[" + def.type + "]* " + def.def, def.attachments,
+          this.sendWithAttachment(channel,toImpressionDesc(def.type,def.def), def.attachments,
             (channel, msg) => {
               var i = this.imprStore.produce(word,def)   // 生产一个新的impression
               // debug("produce new imporession", i)
@@ -60,13 +59,12 @@ class DictBot extends SlackBot{
 	}
 
 	_lookup(channel,text){
-         var word = null;
-	     this._parse(channel,text)
-            .then((w) => {word = w; return w})
-	    .then(this._notifyStarting.bind(this,channel))
-	    .then(lookup)
+        var word = this._parse(channel,text)
+        if(!word) return ;
+	    this._notifyStart(channel,word)
+	    lookup(word)
 	    .then(this._notifySummary.bind(this,channel))
-	    .then(this._push_all.bind(this,channel,word))
+	    .then(this._saveToImpressions.bind(this,channel,word))
 	    .catch(debug)
 	}
 }

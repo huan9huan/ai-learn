@@ -4,6 +4,7 @@ var info = require('debug')('dsl');
 var err = require('debug')('err');
 var md5 = require('js-md5')
 var Part = require('../model/part')
+var toImpressionDesc = require('./utils').toImpressionDesc
 
 function crawl(word) {
 	return new Promise((resolve, reject) => {
@@ -28,7 +29,7 @@ function crawl(word) {
 	              var parts = defs.map((d) => {
 	                // console.log("parse text ",d)
 	                var desc = extractDefs(d);
-	                return new Part(md5(word + desc), type, desc, extractAttachments(d));
+	                return new Part(md5(toImpressionDesc(type, desc)), type, desc, extractAttachments(d));
 	              })
 	              all = all.concat(parts)
 	          });

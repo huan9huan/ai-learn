@@ -1,4 +1,5 @@
 'use strict';
+var QuizSession = require('../model/quiz_session')
 var debug = require('debug')('store')
 
 class QuizStore {
@@ -87,8 +88,8 @@ class QuizStore {
 
 	saveQuiz(questions) {
 		var quizSession = new QuizSession(questions)
-		this.redis.set('q',JSON.stringify(quiz))
-		return quiz
+		this.redis.set('q',JSON.stringify(quizSession))
+		return quizSession
 	}
 
 	update(quiz) {

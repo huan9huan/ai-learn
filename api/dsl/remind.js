@@ -48,11 +48,11 @@ class Remind {
 	   this.remindCallback = this.remindCronJob = null;
 	}
 
-	remind(impressionId) {
+	remind(impressionId,channel) {
 		return new Promise((resolve,reject) => {
 			new ImpressionStore(this.redis).get(impressionId,(i) => {
 				if(i){
-					resolve(new RemindStore(this.redis).remember(i))
+					resolve(new RemindStore(this.redis).remember(i,channel))
 				}
 				else
 					reject("not found")

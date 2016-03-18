@@ -30,13 +30,10 @@ class Quiz {
 		return new QuizStore(this.db).saveQuiz(questions)
 	}
 
-	_isValidChoose(choose) {
-		const valids = ["A","B","C","D","E","F"]
-		return valids.filter((v) => {return choose === v}).length > 0
-	}
-
 	starQuiz() {
-		return this.selectQuizWords().then(this.generateQuiz).then(this.storeQuiz)
+		return this.selectQuizWords()
+			.then(this.generateQuiz.bind(this))
+			.then(this.storeQuiz.bind(this))
 	}
 }
 
