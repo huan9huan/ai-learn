@@ -1,0 +1,7 @@
+{
+  "name": "dictionary",
+  "description": "create quiz",
+  "routes": {
+  	"GET /lookup/:word": "lookup"
+  }
+}
