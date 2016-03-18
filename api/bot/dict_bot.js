@@ -40,8 +40,8 @@ class DictBot extends SlackBot{
 	  return word
 	}
 	
-	_notifySummary(channel, defs) {
-	  if(defs.length > 0){
+	_notifySummary(channel,defs) {
+	  if(defs && defs.length > 0){
        this.send(channel, "<<<< end find, total defintions " + defs.length + ", list as :")
       }else {
        this.send(channel, "!!!! not found any definitions, maybe bad word or not defined in wiktionary.org")
@@ -49,7 +49,7 @@ class DictBot extends SlackBot{
       return defs
 	}
 
-	_push_all(channel,defs) {
+	_push_all(channel, word,defs) {
 		defs.map((def) => {
           this.sendWithAttachment(channel," *[" + def.type + "]* " + def.def, def.attachments,
             (channel, msg) => {
@@ -60,11 +60,13 @@ class DictBot extends SlackBot{
 	}
 
 	_lookup(channel,text){
+          var word = null;
 	  this._parse(channel,text)
+            .then((w) => {word = w; return w})
 	    .then(this._notifyStarting.bind(this,channel))
 	    .then(lookup)
 	    .then(this._notifySummary.bind(this,channel))
-	    .then(this._push_all.bind(this,channel))
+	    .then(this._push_all.bind(this,channel,word))
 	    .catch(debug)
 	}
 }

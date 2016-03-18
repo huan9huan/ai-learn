@@ -40,7 +40,7 @@ class RemindBot extends SlackBot
 	 	return new Promise((resolve, reject) => {
 	 		this.imprStore.get(text,(i) => {
 	 			if(i){
-			 	  var remind = this.remindStore.remember(impression,channel);
+			 	  var remind = this.remindStore.remember(i,channel);
 				  this.send(channel,"OK! bot will remind you for word " + remind.word + " in " + i.timeout/1000 + " second")
 				  resolve(remind)
 	 			}else{

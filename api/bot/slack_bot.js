@@ -10,6 +10,7 @@ class SlackBot{
 
 	constructor(name, token){
 		this.name = name
+                this.token = token
 		this.rtm = new RtmClient(token, {logLevel: 'info'});
 		debug(name + " is starting...");
 		this.rtm.start();
