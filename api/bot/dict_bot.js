@@ -53,7 +53,7 @@ class DictBot extends SlackBot{
           this.sendWithAttachment(channel,toImpressionDesc(def.type,def.def), def.attachments,
             (channel, msg) => {
               var i = this.imprStore.produce(word,def)   // 生产一个新的impression
-              // debug("produce new imporession", i)
+              debug("produce new imporession", i)
             })
 	    })
 	}

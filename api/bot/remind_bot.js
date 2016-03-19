@@ -30,7 +30,9 @@ class RemindBot extends SlackBot
 	 }
 
 	 star(channel,text) {
+	 	debug(text)
  		var impressionId = md5(text)
+ 		debug(impressionId)
  		this.reminder.remind(impressionId,channel)
  		.then((i) => {
  			this.send(channel,"OK! this impression is starred for word " + i.word)

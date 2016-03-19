@@ -33,6 +33,7 @@ exports.random = function *() {
   var quiz = new Quiz(db)
   var words = yield quiz.selectQuizWords()
   var questions = yield quiz.generateQuiz(words)
+  questions = quiz.clean(questions)
   debug(questions)
   this.body = JSON.stringify(questions);
   this.type = "application/json"

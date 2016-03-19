@@ -21,9 +21,15 @@ class Quiz {
 					resolve(q)
 				}).catch(err => {
 					debug(err)
+					resolve()
 				})
 			})
 		}))
+	}
+	clean(questions) {
+		var good = []
+		questions.map((q) => {q ? good.push(q) : null})
+		return good
 	}
 
 	storeQuiz(questions) {
@@ -33,6 +39,7 @@ class Quiz {
 	starQuiz() {
 		return this.selectQuizWords()
 			.then(this.generateQuiz.bind(this))
+			.then(this.clean)
 			.then(this.storeQuiz.bind(this))
 	}
 }

@@ -4,7 +4,7 @@ var request = require('superagent');
 var Part = require('../model/part')
 var md5 = require('js-md5')
 var debug = require('debug')('dsl:youdao')
-var toTranslationImpressionDesc = require('./utils').toTranslationImpressionDesc
+var toImpressionDesc = require('./utils').toImpressionDesc
 
 function youdaoTranslate(word) {
 	return new Promise((resolve, reject) => {
@@ -23,8 +23,9 @@ function youdaoTranslate(word) {
 	        var json = JSON.parse(resp.text);
 	        debug(json)
 	        var translations = json.translation.map((t) => {
-	        	var desc = toTranslationImpressionDesc(word,t)
-	        	return new Part(md5(desc),"yd_trans",desc) 
+	        	var type = "有道翻译"
+	        	var desc = toImpressionDesc(type, t)
+	        	return new Part(md5(desc),type,t)
 	        })
 	        debug(translations)
 	        resolve(translations)
