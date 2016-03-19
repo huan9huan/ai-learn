@@ -1,4 +1,5 @@
 var lookup = require('../../dsl/lookup')
+var youdaoTranslate = require('../../dsl/youdao')
 var ImpressionStore = require('../../store/impression')
 var redis = require('redis')
 var debug = require('debug')("api:lookup")
@@ -19,6 +20,14 @@ exports.lookup = function *() {
 		impressionStore.produce(word, def)
 	})
     this.body = JSON.stringify(defs);
+    this.type = "application/json"
+    this.status = 200;  	
+}
+
+exports.youdao = function *() {
+   const word = this.params.word
+   	var part = yield youdaoTranslate(word)
+   	this.body = JSON.stringify(part)
     this.type = "application/json"
     this.status = 200;  	
 }

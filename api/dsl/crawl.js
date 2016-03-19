@@ -27,7 +27,6 @@ function crawl(word) {
 	          types.forEach(function(type){
 	              var defs = definitions(root,type,"text");
 	              var parts = defs.map((d) => {
-	                // console.log("parse text ",d)
 	                var desc = extractDefs(d);
 	                return new Part(md5(toImpressionDesc(type, desc)), type, desc, extractAttachments(d));
 	              })

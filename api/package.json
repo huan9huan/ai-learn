@@ -26,6 +26,7 @@
     "redis": "~0.10.3",
     "slack-client": "^2.0.4",
     "slack-quizbot": "^0.6.3",
+    "superagent": "^1.8.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
