@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  thread_id: 1
+  type: 1
+  desc: MyString
+  expected: MyString
+  status: 1
+  score: 1
+
+two:
+  thread_id: 1
+  type: 1
+  desc: MyString
+  expected: MyString
+  status: 1
+  score: 1

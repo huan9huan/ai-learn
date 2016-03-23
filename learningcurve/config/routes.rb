@@ -53,4 +53,12 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+   namespace :api do
+    match "/part/create" => "part#create" , via: [:get, :post]
+    match "/part/get" => "part#get" , via: [:get, :post]
+ 
+    match "/i/create" => "impression#create" , via: [:get, :post]
+    match "/i/list" => "impression#list" , via: [:get, :post]
+   end
 end

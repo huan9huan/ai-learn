@@ -39,7 +39,21 @@ class SlackBot{
 			cb(channel, msg)
 		}
 	}
-
+	_parse(channel,text) {
+	  if(!text || typeof text !== "string" || !channel){
+	    return
+	  }else{
+	  	var key = "<@" + this.botid + ">";
+  		var idx = text.indexOf(key)
+  		if(idx == 0) { //被点名需要得出解释
+		    // get the word
+		    var word = text.substring(idx + key.length).trim();
+		   	if(word.indexOf(":") == 0)
+      			word = word.substring(1).trim();
+      		return word
+		}
+	  }
+	}
 	sendWithAttachment(channel, msg, attachments, cb) {
 		if(!attachments || attachments.length == 0){
 			return this.send(channel, msg, cb);

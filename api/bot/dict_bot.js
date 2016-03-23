@@ -18,24 +18,9 @@ class DictBot extends SlackBot{
 
 		this.onMessage(this._lookup.bind(this))
 	}
-	_parse(channel,text) {
-	  if(!text || typeof text !== "string" || !channel){
-	    return
-	  }else{
-	  	var key = "<@" + this.botid + ">";
-  		var idx = text.indexOf(key)
-  		if(idx == 0) { //被点名需要得出解释
-		    // get the word
-		    var word = text.substring(idx + key.length).trim();
-		   	if(word.indexOf(":") == 0)
-      			word = word.substring(1).trim();
-      		return word
-		}
-	  }
-	}
 
 	_notifyStart(channel, word) {
-	  this.send(channel,">>>> begin to find the word definitions in https://en.wiktionary.org/wiki/" + word + "\" ...")
+	  this.send(channel,">>>> begin to find the word definitions in wiktionary and youdao " + word + "\" ...")
 	  return word
 	}
 	

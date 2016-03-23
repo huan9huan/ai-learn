@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  word: MyString
+  type: 1
+  desc: MyString
+  attachments: MyString
+
+two:
+  word: MyString
+  type: 1
+  desc: MyString
+  attachments: MyString
