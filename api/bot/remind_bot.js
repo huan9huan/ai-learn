@@ -1,7 +1,7 @@
 'use strict';
 var SlackBot = require('./slack_bot')
 var RemindStore = require('../store/remind')
-var Remind = require('../dsl/remind')
+var Remind = require('../dsl/star')
 var debug = require('debug')('bot')
 var redis = require('redis');
 var md5 = require('js-md5')

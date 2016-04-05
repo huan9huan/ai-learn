@@ -2,7 +2,7 @@
   "name": "dictionary",
   "description": "create quiz",
   "routes": {
-  	"GET /lookup/:word": "lookup",
-  	"GET /youdao/:word": "youdao"
+  	"GET /api/lookup/:word": "lookup",
+  	"GET /api/youdao/:word": "youdao"
   }
 }

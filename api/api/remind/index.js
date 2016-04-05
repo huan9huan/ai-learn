@@ -1,5 +1,5 @@
 var debug = require('debug')("api:remind")
-var Remind = require('../../dsl/remind')
+var Remind = require('../../dsl/star')
 var redis = require('redis')
 
 const db = redis.createClient()

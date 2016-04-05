@@ -2,9 +2,9 @@
   "name": "quiz",
   "description": "create quiz",
   "routes": {
-  	"GET /quiz/r": "random",
-  	"GET /quiz/start": "start",
-    "GET /quiz/stop": "stop",
-  	"GET /quiz/:word": "get"
+  	"GET /api/quiz/r": "random",
+  	"GET /api/quiz/start": "start",
+    "GET /api/quiz/stop": "stop",
+  	"GET /api/quiz/:word": "get"
   }
 }

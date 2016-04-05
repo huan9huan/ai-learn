@@ -2,6 +2,6 @@
   "name": "remind",
   "description": "remind",
   "routes": {
-  	"GET /remind/:id": "remind"
+  	"GET /api/remind/:id": "remind"
   }
 }
