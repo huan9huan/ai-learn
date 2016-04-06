@@ -18,7 +18,7 @@ exports.login = function *(){
     })
   })
   if(founds.length == 1 && founds[0].pwd === body.pwd) {
-    this.body = {code:0, user: {id: founds[0].id, name: founds[0].name}};
+    this.body = {code:0, user: {id: founds[0].uid, name: founds[0].name}};
     debug("login ok!")
   }else{
     this.body = {code:1, msg: "name or pwd wrong"}
