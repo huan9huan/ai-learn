@@ -4,7 +4,6 @@
  */
 
 var parse = require('co-body');
-var fs = require('fs');
 var debug = require('debug')("users")
 var User = require('./schema')
 var shortid = require('shortid')
