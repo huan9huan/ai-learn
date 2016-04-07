@@ -4,7 +4,7 @@
  */
 
 var parse = require('co-body');
-var debug = require('debug')("users")
+var debug = require('debug')("api:users")
 var User = require('./schema')
 var shortid = require('shortid')
 
@@ -18,7 +18,7 @@ exports.login = function *(){
     })
   })
   if(founds.length == 1 && founds[0].pwd === body.pwd) {
-    this.body = {code:0, user: {id: founds[0].uid, name: founds[0].name}};
+    this.body = {code:0, user: {uid: founds[0].uid, name: founds[0].name}};
     debug("login ok!")
   }else{
     this.body = {code:1, msg: "name or pwd wrong"}
@@ -54,7 +54,7 @@ exports.register = function *(){
     });
   })
   this.status = 201;
-  this.body = {code:0, user: {id: user.uid, name: body.name}};
+  this.body = {code:0, user: {uid: user.uid, name: body.name}};
 }
 
 exports.userInfo = function *(){
@@ -69,7 +69,7 @@ exports.userInfo = function *(){
     })
   })
   if(founds.length == 1) {
-    this.body = {code:0, user: {id: founds[0].id, name: founds[0].name}};
+    this.body = {code:0, user: {uid: founds[0].uid, name: founds[0].name}};
     debug("user info ok!")
   }else{
     this.body = {code:1, msg: "not existed"}

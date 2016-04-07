@@ -1,6 +1,6 @@
 var Channel = require('./schema')
 var parse = require('co-body');
-var debug = require('debug')("channel")
+var debug = require('debug')("api:channel")
 var shortid = require('shortid')
 
 exports.create = function *(){
