@@ -1,8 +1,9 @@
 {
-  "name": "slack",
-  "description": "slack bots api",
+  "name": "bot",
+  "description": "word console bots api",
   "routes": {
-    "GET /bot/remind": "remind",
-    "GET /bot/lookup": "lookup"    
+    "POST /api/bot/create": "create",
+    "GET /api/bot/list": "list",
+    "POST /api/bot/drop": "drop"
   }
 }

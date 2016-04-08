@@ -15,7 +15,7 @@ describe('GET /api/channel/*', function(){
     .end(function(err, res){
       if (err) return done(err);
       Object.keys(res.body).should.eql(['code', 'channel']);
-      cid = res.body.channel.id
+      cid = res.body.channel.cid
       done();
     });
   })

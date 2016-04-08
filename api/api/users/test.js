@@ -16,7 +16,7 @@ describe('GET /api/user/*', function(){
     .end(function(err, res){
       if (err) return done(err);
       Object.keys(res.body).should.eql(['code', 'user']);
-      uid = res.body.user.id
+      uid = res.body.user.uid
       done();
     });
   })

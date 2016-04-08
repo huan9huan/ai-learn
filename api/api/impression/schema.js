@@ -1,5 +1,5 @@
 var mongoose = require('../../store/mongo')
-var timestamps = require('mongoose-timestamp');
+var timestamps = require('mongoose-timestamp')
 
 var impressionSchema = mongoose.Schema({
     cid: String,
