@@ -6,6 +6,7 @@
 
 var program = require('commander');
 var api = require('..');
+var logger = require('../logger')
 
 // options
 
@@ -27,4 +28,4 @@ var app = api({
 // listen
 
 app.listen(program.port, program.host, ~~program.backlog);
-console.log('Listening on %s:%s', program.host, program.port);
+logger.info('Listening on', program.host, program.port);

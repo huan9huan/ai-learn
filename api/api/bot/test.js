@@ -22,7 +22,7 @@ describe('GET /api/bot/*', function(){
     });
   })
 
-  it('should list all bots', function(done){
+  it('should list all bots with spec type', function(done){
     request(listen)
     .get('/api/bot/list')
     .query({type: type})
