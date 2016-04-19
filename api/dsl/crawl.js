@@ -7,6 +7,7 @@ var Part = require('../model/part')
 var toImpressionDesc = require('./utils').toImpressionDesc
 
 function crawl(word) {
+    info('in crawl', word)
 	return new Promise((resolve, reject) => {
 	  var baseURL = 'http://en.wiktionary.org';
 	  var url = baseURL + '/w/api.php?action=parse&format=json&prop=text|revid|displaytitle&page=' + word;  

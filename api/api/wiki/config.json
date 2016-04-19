@@ -3,6 +3,8 @@
   "description": "wiktionary",
   "routes": {
   	"POST /wiki" : "all",
-    "GET /wiki/:word": "get"
+    "GET /wiki/:word": "get", 
+    "POST /api/wiki" : "all",
+    "GET /api/wiki": "all"
   }
 }
