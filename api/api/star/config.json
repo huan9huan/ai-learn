@@ -1,9 +1,0 @@
-{
-  "name": "star",
-  "description": "word console star api",
-  "routes": {
-    "GET /api/star/list": "list",
-    "POST /api/star/add": "add",
-    "POST /api/star/remove": "remove"
-  }
-}

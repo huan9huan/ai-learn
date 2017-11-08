@@ -1,8 +1,0 @@
-{
-  "name": "dictionary",
-  "description": "create quiz",
-  "routes": {
-  	"GET /api/lookup/:word": "lookup",
-  	"GET /api/youdao/:word": "youdao"
-  }
-}

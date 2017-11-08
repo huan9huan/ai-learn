@@ -1,8 +1,0 @@
-{
-  "name": "stats",
-  "description": "api statistics",
-  "routes": {
-    "GET /api/stats": "all",
-    "GET /api/stats/:name": "get"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "name": "channel",
-  "description": "impression create/list",
-  "routes": {
-    "POST /api/impression/create": "create",
-    "GET /api/impression/list": "list"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "name": "users",
-  "description": "user account resource",
-  "routes": {
-    "POST /api/user/login": "login",
-    "POST /api/user/register": "register",
-    "GET /api/user/info": "userInfo"
-  }
-}

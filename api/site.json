@@ -1,5 +1,0 @@
-{
-	"domain": "http://localhost:3000",
-	"part_save": "/api/part/create",
-	"part_get": "/api/part/get"
-}

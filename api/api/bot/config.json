@@ -1,9 +1,0 @@
-{
-  "name": "bot",
-  "description": "word console bots api",
-  "routes": {
-    "POST /api/bot/create": "create",
-    "GET /api/bot/list": "list",
-    "POST /api/bot/drop": "drop"
-  }
-}

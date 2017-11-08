@@ -1,7 +1,0 @@
-{
-  "name": "remind",
-  "description": "remind",
-  "routes": {
-  	"GET /api/remind/:id": "remind"
-  }
-}

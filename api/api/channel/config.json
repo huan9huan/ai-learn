@@ -1,8 +1,0 @@
-{
-  "name": "channel",
-  "description": "channel create/list",
-  "routes": {
-    "POST /api/channel/create": "create",
-    "GET /api/channel/list": "list"
-  }
-}
