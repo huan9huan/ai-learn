@@ -3,3 +3,9 @@ node_modules/
 *.rdb
 
 *.html
+
+.vscode
+
+data
+
+.ipynb*
