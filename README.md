@@ -12,3 +12,8 @@ jupyter notebook --ip 127.0.0.1 --notebook-dir ./notebooks --config ~/jupyter_no
 cd .
 jupyter notebook
 ```
+
+# run tensorboard
+```
+tensorboard --logdir /tmp/tf_logs/cnn-mnist/
+```
