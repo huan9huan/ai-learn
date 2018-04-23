@@ -17,3 +17,7 @@ jupyter notebook
 ```
 tensorboard --logdir /tmp/tf_logs/cnn-mnist/
 ```
+
+## Keras 101 - learn keras
+
+## np101 - learn how to use np
